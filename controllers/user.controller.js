@@ -43,7 +43,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
 
     if (!email || !password || !role) {
       return res.status(400).json({
@@ -72,13 +72,13 @@ export const login = async (req, res) => {
 
     if (role !== user.role) {
       return res.status(400).json({
-        message: "Invalid role",
+        message: "Account doesn't exist with this role",
         success: false,
       });
     }
 
     const tokenData = {
-      id: user._id,
+      userId: user._id,
     };
 
     const token = jwt.sign(tokenData, process.env.JWT_SECRET, {
@@ -128,14 +128,11 @@ export const updateProfile = async (req, res) => {
   try {
     const { name, email, phone, bio, skills } = req.body;
 
-    if (!name || !email || !phone || !bio || !skills) {
-      return res.status(400).json({
-        message: "Please fill in all fields",
-        success: false,
-      });
+    let skillsArray;
+    if(skills) {
+      skillsArray = skills.split(",");
     }
 
-    const skillsArray = skills.split(",");
     const userId = req.id;
 
     let user = await User.findById(userId);
@@ -147,11 +144,11 @@ export const updateProfile = async (req, res) => {
       });
     }
 
-    user.name = name;
-    user.email = email;
-    user.phone = phone;
-    user.profile.bio = bio;
-    user.profile.skills = skillsArray;
+    if(name) user.name = name;
+    if(email) user.email = email;
+    if(phone) user.phone = phone;
+    if(bio) user.profile.bio = bio;
+    if(skills) user.profile.skills = skillsArray;
 
     await user.save();
 
