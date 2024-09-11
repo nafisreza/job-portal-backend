@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    phone: {
+        type: String,
+        required: true,
+    },
     role: {
         type: Boolean,
         enum: ["employee", "recruiter"],
@@ -49,3 +53,5 @@ const userSchema = new mongoose.Schema({
         },
     },
 }, {timestamps: true});
+
+const User = mongoose.model("User", userSchema);
