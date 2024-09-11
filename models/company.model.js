@@ -5,15 +5,6 @@ const companySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    password: {
-        type: String,
-        required: true,
-    },
     logo: {
         type: String,
         default: "",
@@ -35,3 +26,5 @@ const companySchema = new mongoose.Schema({
 }, {timestamps: true});
 
 const Company = mongoose.model("Company", companySchema);
+
+export default Company;
