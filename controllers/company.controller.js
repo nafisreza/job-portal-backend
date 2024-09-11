@@ -1,21 +1,21 @@
-import Company from "../models/company.model";
+import Company from "../models/company.model.js";
 
 export const registerCompany = async (req, res) => {
   try {
-    const { companyName } = req.body;
+    const { name } = req.body;
 
-    if (!companyName) {
+    if (!name) {
       return res.status(400).send("Company name is required");
     }
 
-    let company = await Company.findOne({ name: companyName });
+    let company = await Company.findOne({ name });
 
     if (company) {
       return res.status(400).send("Company already exists");
     }
 
     company = await Company.create({
-      name: companyName,
+      name,
       userId: req.id,
     });
 
@@ -24,6 +24,7 @@ export const registerCompany = async (req, res) => {
       company,
       status: true,
     });
+
   } catch (error) {
     res.status(400).send(error);
   }
